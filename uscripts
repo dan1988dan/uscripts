@@ -1,0 +1,295 @@
+#!/bin/bash
+
+############################## U SCRIPTS ###################################
+##                  DanielDAN - danielolszyk1988@gmail.com                ##
+##                      This program is Open Source                       ##
+############################################################################
+
+
+# bold=$(tput bold)                   # Text style bold
+# normal=$(tput sgr0)                 # Text style normal
+
+Print_logo() {
+    echo -e "\e[33m         __           _       _        "
+    echo -e "\e[33m /\ /\  / _\ ___ _ __(_)_ __ | |_ ___ \e[97;1m{\e[1;33mv0.1#alpha\e[0m\e[97;1m}\e[0m"
+    echo -e "\e[33m/ / \ \ \ \ / __| '__| | '_ \| __/ __| "
+    echo -e "\e[33m\ \_/ / _\ \ (__| |  | | |_) | |_\__ \ "
+    echo -e "\e[33m \___/  \__/\___|_|  |_| .__/ \__|___/ "
+    echo -e "\e[33m                       |_|             \e[39;4mhttps://uscripts.org\e[0m"
+    printf "$(date) \n"
+    Footer
+}
+Header(){                  # Print Headers inside functions
+    local h="$@"
+    echo " --------------------------------------------------------------"
+    echo " ${h}"
+    echo " --------------------------------------------------------------"
+}
+Footer() {
+    echo ""
+}
+Noparam() {                  # Print message when no parameter
+    Print_logo
+    echo "No parameters"
+    echo "use --help or -h parameter for help"
+    echo "Example:  ./us.sh -h"
+    Footer
+}
+Wrongparam() {               # Print message when wrong parameter
+    printf "Incorrenct parameter"
+}
+Help() {                   # Help message
+    Print_logo
+    echo "Usage: us.sh [options] COMMAND"
+    echo "Example: ./us.sh -ct"
+    echo ""
+    echo "OPTIONS:"
+    echo "--------"
+    echo "-t,  --checktor       Check are you using Tor or not"
+    echo "-p,  --ping           Ping"
+    echo "-I,  --checkip        Public ip"
+    echo "-i,  --systeminfo     System info and public ip address"
+    echo "-d,  --dns            Hostname and dns info and local ip"
+    echo "-w,  --who            Who is online"
+    echo "-l,  --last           Last logged in users"
+    echo "-dU, --discusage      Disc usage"
+    echo "-dS, --discusages     Disc usage (short)"
+    echo "-kS, --showkernels    Show old kernels list"
+    echo "-kR, --removekernels  Remove old kernels"
+    echo "-tC, --checkthumbnail  Check thumbnail cache"
+    echo "-tR, --removethumbnail    Remove thumbnail cache"
+    echo "-c,  --chmod          Print chmod permissions table"
+    echo "-sF, --subfolders     Tell you how many subfolders are here"
+    echo "-u,  --aptupdate      Update and upgrade system, after remove all unused dependecies"
+    echo "-----------------"
+    echo "-h,  --help           Print basic help message and exit"
+    echo "-V, --version         Print program version and exit"
+    echo "-U, --update          Update program to new version"
+    echo "-A, --about           About..."
+    Footer
+}
+Checktor() {                 # Check are you using Tor or not
+    Header " Check Tor: "
+    curl -sS https://check.torproject.org | grep --color -m1 'Congratulations.\|This browser\|is configured\|to use\|Tor.\|Sorry.\|You are\|not using'
+    Footer
+}
+Ping() {
+    Header " Ping: "
+    ping google.com -c 8
+    Footer
+}
+Checkip() {                  # Public ip
+    Header " ip address: "
+    curl -sS ifconfig.me
+    echo -e "\n"
+}
+Systeminfo() {               # System info (uname + curl ifconfig.me + lsb_release)
+    local LSB=/usr/bin/lsb_release            # Path to lsb_release script (system info)
+    Header " System info: "
+    echo "OS : $(uname)" | grep --color -m1 "Linux\|BSD\|bsd\|Bsd\|NET\|Net\|net\|Windows"
+    echo "Public IP : $(curl -sS ifconfig.me)" | grep --color -m1 "$(curl -sS ifconfig.me)"
+    [ -x $LSB ] && $LSB -a || echo "$LSB command is not insalled (set \$LSB variable)"
+    Footer
+}
+Host_Dns() {                 # Hostname and DNS info and local ip
+    Header " Hostname and DNS info and ip: "
+    local dnsips=$(sed -e '/^$/d' /etc/resolv.conf | awk '{if (tolower($1)=="nameserver") print $2}')
+    echo "Hostname : $(hostname -s)"
+    echo "DNS domain : $(hostname -d)"
+    echo "Fully qualified domain name : $(hostname -f)"
+    echo "Network address (IP) : $(hostname -i)"
+    echo "DNS name servers (DNS IP) : ${dnsips}"
+    Footer
+}
+Who_is_online() {            # Who is online
+    Header " Who is online: "
+    who -H
+    Footer
+}    
+Last_logged_in_users() {
+    Header " Last logged in users: "
+    last
+    Footer
+}
+Disc_usage() {
+    Header " Disc usage: "
+    df --total -H
+    Footer
+}
+Disc_usage_short() {
+    Header " Disc usage short: "
+    df / -H
+    Footer
+}
+Show_kernels() {
+    Header "Show old kernels list: "
+    sudo dpkg --list 'linux-image*'
+    Footer
+}
+Remove_kernels() {
+    Header "Remove old kernels: "
+    sudo apt-get remove linux-image-VERSION
+    Footer
+}
+Check_thumbnail() {
+    Header "Check thumbnail cache: "
+    du -sh ~/.cache/thumbnails
+    Footer
+}
+Remove_thumbnail() {
+    Header "Remove/Clean thumbnail cache: "
+    sudo rm -rf ~/.cache/thumbnails/*
+    Footer
+}
+Chmod_table() {
+    local red="\e[0;91m"
+    local reset="\e[0m"
+    Header "chmod  -  Permissions Table:"
+echo "
+	| User	Group	Other
+	|
+Read	|  4	  4	  4
+	|
+Write	|  2	  2	  2	
+	|
+Execute |  1	  1	  1
+	|
+	|  U	  G	  O
+	|  X	  X	  X"
+echo -e "
+${red}Chmods:${reset}
+777	=	rwxrwxrwx
+755	=	rwxr-xr-x
+644	=	rw-r--r--
+700	=	rwx------
+750	=	rwxr-x---"
+Footer
+}
+Subfolders() {               # Tell you how many subfolders are in current path
+    Header " Subfolders: "
+    echo "Liczba podkatalogów to:  " $(ls -al | grep '^d' | wc -l)
+    echo "Uwaga policzone są też katalogi  ./  i  ../"
+    Footer
+}
+Aptupdate() {                # Update and upgrade system, after remove all unused dependecies
+    Header " System update: "
+    sleep 2
+    echo -e "Updating and upgrading system.... \n"
+    sleep 2
+    sudo apt update 
+    sudo apt upgrade 
+    sudo apt autoremove
+    sudo apt remove --purge
+    Header " DONE."
+    Footer
+}
+Version() {                  # Program Version
+    echo -e "Program version: v0.1#alpha \n"
+}
+About() {                    # About program
+    Header " About: "
+    echo -e "About..... \n"
+}
+Update() {                   # Update program
+    Header " Update: "
+    echo "This option is not available yet"
+    echo -e "Sorry .... \n"
+}
+
+
+if [ "$1" = "" ]; then              # Option no parameter
+    Noparam
+fi
+
+while [ ! -z "$1" ]; do             # Options
+case $1 in
+    --help|-h)
+        shift
+        Help
+        ;;
+    --checktor|-t)
+        shift
+        Checktor
+        ;; 
+    --ping|-p)
+        shift
+        Ping
+        ;;
+    --checkip|-I)
+        shift
+        Checkip
+        ;;
+    --systeminfo|-i)
+        shift
+        Systeminfo
+        ;;
+    --dns|-d)
+        shift
+        Host_Dns
+        ;;
+    --who|-w)
+        shift
+        Who_is_online
+        ;;
+    --last|-l)
+        shift
+        Last_logged_in_users
+        ;;
+    --discusage|-dU)
+        shift
+        Disc_usage
+        ;;
+    --discuseges|-dS)
+        shift
+        Disc_usage_short
+        ;;
+    --showkernels|-kS)
+        shift
+        Show_kernels
+        ;;
+    --removekernels|-kR)
+        shift
+        Remove_kernels
+        ;;
+    --checkthumbnails|-tC)
+        shift
+        Check_thumbnail
+        ;;
+    --removethumbnails|-tR)
+        shift
+        Remove_thumbnail
+        ;;
+    --chmod|-c)
+        shift
+        Chmod_table
+        ;;
+    --subfolders|-sF)
+        shift
+        Subfolders
+        ;;
+    --aptupdate|-u)
+        shift
+        Aptupdate
+        ;;
+    --version|-V)
+        shift
+        Version
+        ;;
+    --update|-U)
+        shift
+        Update
+        ;;
+    --about|-A)
+        shift
+        About
+        ;;
+    *)
+        shift
+        Wrongparam
+        exit
+        ;;
+esac
+done
+
+
+
