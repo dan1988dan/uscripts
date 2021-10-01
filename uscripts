@@ -11,7 +11,7 @@
 
 Print_logo() {
     echo -e "\e[33m         __           _       _        "
-    echo -e "\e[33m /\ /\  / _\ ___ _ __(_)_ __ | |_ ___ \e[97;1m{\e[1;33mv0.1#alpha\e[0m\e[97;1m}\e[0m"
+    echo -e "\e[33m /\ /\  / _\ ___ _ __(_)_ __ | |_ ___ \e[97;1m{\e[1;33mv0.2#alpha\e[0m\e[97;1m}\e[0m"
     echo -e "\e[33m/ / \ \ \ \ / __| '__| | '_ \| __/ __| "
     echo -e "\e[33m\ \_/ / _\ \ (__| |  | | |_) | |_\__ \ "
     echo -e "\e[33m \___/  \__/\___|_|  |_| .__/ \__|___/ "
@@ -184,7 +184,7 @@ Aptupdate() {                # Update and upgrade system, after remove all unuse
     Footer
 }
 Version() {                  # Program Version
-    echo -e "Program version: v0.1#alpha \n"
+    echo -e "Program version: v0.2#alpha \n"
 }
 About() {                    # About program
     Header " About: "
