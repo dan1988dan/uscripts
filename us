@@ -44,43 +44,46 @@ Wrongparam() {               # Print message when wrong parameter
 }
 Help() {                   # Help message
     Print_logo
-    echo "Usage:  us.sh [options]"
+    echo "Usage:  us.sh [option] [option=value]"
     echo "Example:  ./us -i -d -w -sC=60"
     echo ""
     echo "OPTIONS:"
     echo "--------"
-    echo "-t,  --checktor           Check are you using Tor or not"
-    echo "-p,  --ping               Ping"
-    echo "-I,  --checkip            Public ip"
+    echo "-t   --checktor           Check are you using Tor or not"
+    echo '-p   --ping=URL           Ping (e.g. "ping=redhat.com") - default URL is "google.com"'
+    echo "-I   --checkip            Public ip"
     echo "-u   --uptime             Tell how long the system has been running"
-    echo "-i,  --systeminfo         System info and public ip address"
-    echo "-k,  --kernel             Check kernel version"
-    echo "-d,  --dns                Hostname and dns info and local ip"
-    echo "-w,  --who                Who is online"
-    echo "-l,  --last               Last logged in users"
-    echo "-dU, --discusage          Disc usage"
-    echo "-dS, --discusages         Disc usage (short)"
-    echo "-kS, --showkernels        Show old kernels list"
-    echo "-kR, --removekernels      Remove old kernels"
-    echo "-fE, --firmwareerrors     Show all firmware errors"
+    echo "-i   --systeminfo         System info and public ip address"
+    echo "-k   --kernel             Check kernel version"
+    echo "-d   --dns                Hostname and dns info and local ip"
+    echo "-w   --who                Who is online"
+    echo "-l   --last               Last logged in users"
+    echo "-dU  --discusage          Disc usage"
+    echo "-dS  --discusages         Disc usage (short)"
+    echo "-kS  --showkernels        Show old kernels list"
+    echo "-kR  --removekernels      Remove old kernels"
+    echo "-fE  --firmwareerrors     Show all firmware errors"
     echo "-vM  --virtualmemory      Report virtual memory statistics"
     echo "-mI  --memoryinfo         Print the memory information"
     echo "-cI  --cpuinfo            Print the cpu information"
     echo "-cA  --cpuarchitecture    Display information about the cpu architecture"
     echo "-cL  --cpuaverage         Check the cpu load average"
     echo "-cS  --cpustat            Check the cpu stat"
-    echo "-sS   --checkswap         Check your current swappiness setting"
-    echo "-sC   --changeswap        Change your current swappiness setting"
-    echo "-tC, --checkthumbnail     Check thumbnail cache"
-    echo "-tR, --removethumbnail    Remove thumbnail cache"
-    echo "-c,  --chmod              Print chmod permissions table"
-    echo "-sF, --subfolders         Tell you how many subfolders are here"
-    echo "-uU,  --aptupdate         Update and upgrade system, after remove all unused dependecies"
-    echo "-----------------"
-    echo "-h,  --help               Print basic help message and exit"
-    echo "-V, --version             Print program version and exit"
-    echo "-U, --update              Update program to new version"
-    echo "-A, --about               About..."
+    echo "-sS  --checkswap          Check your current swappiness setting"
+    echo '-sC  --changeswap=value   Change your current swappiness setting (e.g. "changeswap=60")'
+    echo "-sE  --swap=enable        Enable swap"
+    echo "-sD  --swap=disable       Disable swap"
+    echo "-tC  --checkthumbnail     Check thumbnail cache"
+    echo "-tR  --removethumbnail    Remove thumbnail cache"
+    echo "-c   --chmod              Print chmod permissions table"
+    echo "-sF  --subfolders         Tell you how many subfolders are here"
+    echo "-uU  --aptupdate          Update and upgrade system, after remove all unused dependecies"
+    echo "-----------------         ------------------------------------"
+    echo "-h   --help               Print basic help message and exit"
+    echo "-hh  --Help               Print advanced help message and exit"
+    echo "-V  --version             Print program version and exit"
+    echo "-U  --update              Update program to new version"
+    echo "-A  --about               About..."
     Footer
 }
 Checktor() {                 # Check are you using Tor or not
@@ -91,6 +94,11 @@ Checktor() {                 # Check are you using Tor or not
 Ping() {
     Header " Ping: "
     ping google.com -c 8
+    Footer
+}
+Ping2() {
+    Header " Ping: "
+    ping $ping_url -c 8
     Footer
 }
 Checkip() {                  # Public ip
@@ -208,6 +216,16 @@ Changeswap2() {
     sudo sysctl vm.swappiness
     Footer
 }
+Enableswap() {
+    Header "Enable swap: "
+    sudo swap$swapon -a
+    Footer
+}
+Disableswap() {
+    Header "Disable swap: "
+    sudo swap$swapoff -a
+    Footer
+}
 Check_thumbnail() {
     Header "Check thumbnail cache: "
     du -sh ~/.cache/thumbnails
@@ -294,6 +312,11 @@ case $1 in
         shift
         Ping
         ;;
+    --ping=*|-p=*)
+        ping_url="${1#*=}"
+        shift
+        Ping2
+        ;;
     --checkip|-I)
         shift
         Checkip
@@ -378,6 +401,16 @@ case $1 in
         --changeswap|-sC)
         shift
         Changeswap2
+        ;;
+    --swap=enable|--swapenable|--swap=on|--swapon|-sE)
+        swapon=on
+        shift
+        Enableswap
+        ;;
+    --swap=disable|--swapdisable|--swap=off|--swapoff|-sD)
+        swapoff=off
+        shift
+        Disableswap
         ;;
     --checkthumbnails|-tC)
         shift
