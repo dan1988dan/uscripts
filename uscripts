@@ -21,9 +21,9 @@ Print_logo() {
 }
 Header(){                  # Print Headers inside functions
     local h="$@"
-    echo " --------------------------------------------------------------"
-    echo " ${h}"
-    echo " --------------------------------------------------------------"
+    echo " +-----------------------------------------------------------------------"
+    echo " | ${h}"
+    echo " +-----------------------------------------------------------------------"
 }
 Footer() {
     echo ""
@@ -50,15 +50,14 @@ Help() {                   # Help message
     echo "OPTIONS:"
     echo "--------"
     echo "-t    --checktor           Check are you using Tor or not"
-    echo '-p    --ping               Ping (e.g. "ping=redhat.com") - [[default URL is "google.com"]]'
-    echo '      --ping=URL'
+    echo '-p    --ping=[URL]         Ping (e.g. "ping=redhat.com") - [[default URL is "google.com"]]'
     echo "-I    --checkip            Public ip"
     echo "-u    --uptime             Tell how long the system has been running"
     echo "-i    --systeminfo         System info and public ip address"
     echo "-k    --kernel             Check kernel version"
     echo "-d    --dns                Hostname and dns info and local ip"
     echo "-w    --who                Who is online"
-    echo '-l    --last=value         Last logged in users (e.g. "last=10") - [[default prints everything]]'
+    echo '-l    --last=[VALUE]       Last logged in users (e.g. "last=10") - [[default prints everything]]'
     echo "-du   --discusage          Disc usage"
     echo "-ds   --discusages         Disc usage (short)"
     echo "-ks   --showkernels        Show old kernels list"
@@ -72,181 +71,37 @@ Help() {                   # Help message
     echo "-cs   --cpustat            Check the cpu stat"
     echo "-hn   --handwarename       Find the server hardware name and model"
     echo "-ss   --checkswap          Check your current swappiness setting"
-    echo '-sc   --changeswap=value   Change your current swappiness setting (e.g. "changeswap=60")'
+    echo '-sc   --changeswap=[VALUE] Change your current swappiness setting (e.g. "changeswap=60")'
     echo "-se   --swap=enable        Enable swap"
     echo "-sd   --swap=disable       Disable swap"
     echo "-tc   --checkthumbnail     Check thumbnail cache"
     echo "-tr   --removethumbnail    Remove thumbnail cache"
-    echo "-ch   --chmod              Print chmod permissions table"
     echo "-sf   --subfolders         Tell you how many subfolders are here"
     echo "-uu   --aptupdate          Update and upgrade system, after remove all unused dependecies"
-    echo "-----------------         ------------------------------------"
+    echo -e "-----------------         ------------------------------------
+    CHEAT SHEET:"
+    echo "-ch   --chmod              chmod permissions table"
+    echo "-ep   --etcpasswd          etc/passwd explanation"
+    echo "-es   --etcshadow          etc/shadow explanation"
+    echo "      --movingcli          moving cli shortcuts"
+    echo -e "-----------------         ------------------------------------
+    PROGRAM:"
     echo "-h    --help               Print basic help message and exit"
     echo "-V    --version            Print program version and exit"
     echo "-U    --update             Update program to new version"
     echo "-A    --about              About..."
     Footer
 }
-Checktor() {                 # Check are you using Tor or not
-    Header " Check Tor: "
-    curl -sS https://check.torproject.org | grep --color -m1 'Congratulations.\|This browser\|is configured\|to use\|Tor.\|Sorry.\|You are\|not using'
-    Footer
-}
-Ping() {
-    Header " Ping: "
-    ping google.com -c 8
-    Footer
-}
-Ping2() {
-    Header " Ping: "
-    ping $ping_url -c 8
-    Footer
-}
-Checkip() {                  # Public ip
-    Header " ip address: "
-    curl -sS ifconfig.me
-    echo -e "\n"
-}
-Uptime() {
-    Header "Uptime: "
-    uptime
-    Footer
-}
-Systeminfo() {               # System info (uname + curl ifconfig.me + lsb_release)
-    # local LSB=/usr/bin/lsb_release            # Path to lsb_release script (system info)
-    Header " System info: "
-    lsb_release -cdir
-    Footer
-}
-Kernel() {                   # Check kernel version
-    Header " Kernel version: "
-    uname -v
-    Footer
-}
-Host_Dns() {                 # Hostname and DNS info and local ip
-    Header " Hostname and DNS info and ip: "
-    local dnsips=$(sed -e '/^$/d' /etc/resolv.conf | awk '{if (tolower($1)=="nameserver") print $2}')
-    echo "Hostname : $(hostname -s)"
-    echo "DNS domain : $(hostname -d)"
-    echo "Fully qualified domain name : $(hostname -f)"
-    echo "Network address (IP) : $(hostname -i)"
-    echo "DNS name servers (DNS IP) : ${dnsips}"
-    Footer
-}
-Who_is_online() {            # Who is online
-    Header " Who is online: "
-    who -H
-    Footer
-}    
-Last_logged_in_users() {
-    Header " Last logged in users: "
-    last -n $last_number
-    Footer
-}
-Last_logged_in_users2() {
-    Header " Last logged in users: "
-    last
-    Footer
-}
-Disc_usage() {
-    Header " Disc usage: "
-    df --total -H
-    Footer
-}
-Disc_usage_short() {
-    Header " Disc usage short: "
-    df / -H
-    Footer
-}
-Show_kernels() {
-    Header "Show old kernels list: "
-    sudo dpkg --list 'linux-image*'
-    Footer
-}
-Remove_kernels() {
-    Header "Remove old kernels: "
-    sudo apt-get remove linux-image-VERSION
-    Footer
-}
-Firmware() {
-    Headers "Firmware errors: "
-    dmesg | grep -i -P --colour='never' 'firmware'
-    Footer
-}
-Virtualmemory() {
-    Header "Virtual memory statistics: "
-    vmstat
-    Footer
-}
-Memoryinfo() {
-    Header "Memory information: "
-    cat /proc/meminfo
-    Footer
-}
-Cpuinfo() {
-    Header "Cpu information: "
-    cat /proc/cpuinfo
-    Footer
-}
-Cpuarchitecture() {
-    Header "Information about the CPU architecture: "
-    lscpu
-    Footer
-}
-Cpuaverage() {
-    Header "Cpu load average: "
-    cat /proc/loadavg
-    Footer
-}
-Cpustat() {
-    Header "Cpu stat: "
-    cat /proc/stat
-    Footer
-}
-Hardwarename() {
-    Header "Server hardware name and model: "
-    sudo dmidecode | grep -A3 '^System Information'
-    Footer
-}
-Checkswap() {
-    Header "Your current swappiness setting: "
-    cat /proc/sys/vm/swappiness
-    Footer
-}
-Changeswap() {
-    Header "Change your current swappiness setting: "
-    #echo "current value: " 
-    #cat /proc/sys/vm/swappiness
-    #echo "enter value: "
-    #read xvalue
-    sudo sysctl vm.swappiness=$swap_value
-    Footer
-}
-Changeswap2() {
-    Header "Change your current swappiness setting: "
-    sudo sysctl vm.swappiness
-    Footer
-}
-Enableswap() {
-    Header "Enable swap: "
-    sudo swap$swapon -a
-    Footer
-}
-Disableswap() {
-    Header "Disable swap: "
-    sudo swap$swapoff -a
-    Footer
-}
-Check_thumbnail() {
-    Header "Check thumbnail cache: "
-    du -sh ~/.cache/thumbnails
-    Footer
-}
-Remove_thumbnail() {
-    Header "Remove/Clean thumbnail cache: "
-    sudo rm -rf ~/.cache/thumbnails/*
-    Footer
-}
+#Ping() {
+#    Header " Ping: "
+#    ping google.com -c 8
+#    Footer
+#}
+#Ping2() {
+#    Header " Ping: "
+#    ping $ping_url -c 8
+#    Footer
+#}
 Chmod_table() {
     local red="\e[0;91m"
     local reset="\e[0m"
@@ -262,33 +117,51 @@ e(x)ecute|  1   1   1            700 = rwx------
 U=users   G=group   O=others"
 Footer
 }
-Subfolders() {               # Tell you how many subfolders are in current path
-    Header " Subfolders: "
-    echo "Liczba podkatalogów to:  " $(ls -al | grep '^d' | tail -n +3 | wc -l)
+Etcpasswd() {
+    Header "/etc/passwd: "
+    echo "
+mark: x: 1001: 1001: mark,,,: /home/mark: /bin/bash
+  |   |   |     |     |             |       |
+  |   |   |     |     |             |       +-> 7. Login shell
+  |   |   |     |     |             +---------> 6. Home directory
+  |   |   |     |     +-----------------------> 5. GECOS (Full info of user or app)
+  |   |   |     +-----------------------------> 4. GID (Group ID)
+  |   |   +-----------------------------------> 3. UID (User ID)
+  |   +---------------------------------------> 2. Password
+  +-------------------------------------------> 1. Username"
     Footer
 }
-Aptupdate() {                # Update and upgrade system, after remove all unused dependecies
-    Header " System update: "
-    sleep 2
-    echo -e "Updating and upgrading system.... \n"
-    sleep 2
-    sudo apt update 
-    sudo apt upgrade 
-    sudo apt autoremove
-    sudo apt remove --purge
-    Header " DONE."
+Etcshadow() {
+    Header "/etc/shadow: "
+    echo "
+mark: #6#: 17736: 0: 99999: 7: : : :
+  |    |     |    |    |     | | | |
+  |    |     |    |    |     | | | +---> 9. Unused
+  |    |     |    |    |     | | +-----> 8. Expiration date
+  |    |     |    |    |     | +-------> 7. Inactivity period
+  |    |     |    |    |     +---------> 6. Warning period
+  |    |     |    |    +---------------> 5. Maximum password age
+  |    |     |    +--------------------> 4. Minimum password age
+  |    |     +-------------------------> 3. Last password age
+  |    +-------------------------------> 2. Encrypted password
+  +------------------------------------> 1. Username"
     Footer
 }
-Version() {                  # Program Version
-    echo -e "Program version: v0.3#alpha"
-}
-About() {                    # About program
-    echo '"UScripts" - means - "Usefull Scripts"'
-    echo -e "License: Open Source"
-}
-Update() {                   # Update program
-    echo "This option is not available yet"
-    echo "Visit https://uscripts.org  or  https://github.com/dan1988dan/uscripts"
+Movingcli() {
+    Header "Moving CLI: "
+    echo "
+        Ctrl-A          Ctrl-E              |
+   <-------------- ----------------->       |
+           Alt-B      Alt-F                 | Moving
+        <--------- ----------->             |
+            Ctrl-B Ctrl-F                   |
+                <- ->
+$  cp   m y f i ( l ) e n a m e   dir
+        <--------- ----------->             
+          Ctrl-W      Alt-D                 | Erasing
+   <-------------- ----------------->       |
+        Ctrl-U          Ctrl-K              "
+    Footer
 }
 
 
@@ -306,152 +179,248 @@ case $1 in
         ;;
     --checktor|-t)
         shift
-        Checktor
+        Header " Check Tor: "
+        curl -sS https://check.torproject.org | grep --color -m1 'Congratulations.\|This browser\|is configured\|to use\|Tor.\|Sorry.\|You are\|not using'
+        Footer
         ;; 
     --ping|-p)
         shift
-        Ping
-        ;;
-    --ping=*|-p=*)
-        ping_url="${1#*=}"
-        shift
-        Ping2
+            if [ "$1" ]; then
+                Header " Ping: "
+                ping $1
+            else
+                ping google.pl
+            fi
         ;;
     --checkip|-I)
         shift
-        Checkip
+        Header " ip address: "
+        curl -sS ifconfig.me
+        echo -e "\n"
         ;;
     --uptime|-u)
         shift
-        Uptime
+        Header "Uptime: "
+        uptime
+        Footer
         ;;
-    --systeminfo|-i|i)
+    --systeminfo|-i)
         shift
-        Systeminfo
+        # local LSB=/usr/bin/lsb_release            # Path to lsb_release script (system info)
+        Header " System info: "
+        lsb_release -cdir
+        Footer
         ;;
-    --kernel|-k|k)
+    --kernel|-k)
         shift
-        Kernel
+        Header " Kernel version: "
+        uname -v
+        Footer
         ;;
-    --dns|-d|d)
+    --dns|-d)
         shift
-        Host_Dns
+        Header " Hostname and DNS info and ip: "
+        local dnsips=$(sed -e '/^$/d' /etc/resolv.conf | awk '{if (tolower($1)=="nameserver") print $2}')
+        echo "Hostname : $(hostname -s)"
+        echo "DNS domain : $(hostname -d)"
+        echo "Fully qualified domain name : $(hostname -f)"
+        echo "Network address (IP) : $(hostname -i)"
+        echo "DNS name servers (DNS IP) : ${dnsips}"
+        Footer
         ;;
-    --who|-w|w)
+    --who|-w)
         shift
-        Who_is_online
+        Header " Who is online: "
+        who -H
+        Footer
         ;;
+    # Last_logged_in_users() {
+    # Header " Last logged in users: "
+    # last -n $last_number
+    # Footer
+    # }
     --last=*|-l=*)
         last_number="${1#*=}"
         shift
-        Last_logged_in_users
+        Header " Last logged in users: "
+        last -n $last_number
+        Footer
         ;;
     --last|-l)
         shift
-        Last_logged_in_users2
+        Header " Last logged in users: "
+        last
+        Footer
         ;;
-    --discusage|-dU)
+    --discusage|-du)
         shift
-        Disc_usage
+        Header " Disc usage: "
+        df --total -H
+        Footer
         ;;
-    --discuseges|-dS)
+    --discuseges|-ds)
         shift
-        Disc_usage_short
+        Header " Disc usage short: "
+        df / -H
+        Footer
         ;;
-    --showkernels|-kS)
+    --showkernels|-ks)
         shift
-        Show_kernels
+        Header "Show old kernels list: "
+        sudo dpkg --list 'linux-image*'
+        Footer
         ;;
-    --removekernels|-kR)
+    --removekernels|-kr)
         shift
-        Remove_kernels
+        Header "Remove old kernels: "
+        sudo apt-get remove linux-image-VERSION
+        Footer
         ;;
-    --firmwareerrors|-fE)
+    --firmwareerrors|-fe)
         shift
-        Firmware
+        Headers "Firmware errors: "
+        dmesg | grep -i -P --colour='never' 'firmware'
+        Footer
         ;;
-    --virtualmemory|-vM)
+    --virtualmemory|-vm)
         shift
-        Virtualmemory
+        Header "Virtual memory statistics: "
+        vmstat
+        Footer
         ;;
-    --memoryinfo|-mI)
+    --memoryinfo|-mi)
         shift
-        Memoryinfo
+        Header "Memory information: "
+        cat /proc/meminfo
+        Footer
         ;;
-    --cpuinfo|-cI)
+    --cpuinfo|-ci)
         shift
-        Cpuinfo
+        Header "Cpu information: "
+        cat /proc/cpuinfo
+        Footer
         ;;
-    --cpuarchitecture|-cA)
+    --cpuarchitecture|-ca)
         shift
-        Cpuarchitecture
+        Header "Information about the CPU architecture: "
+        lscpu
+        Footer
         ;;
-    --cpuaverage|-cL)
+    --cpuaverage|-cl)
         shift
-        Cpuaverage
+        Header "Cpu load average: "
+        cat /proc/loadavg
+        Footer
         ;;
-    --cpustat|-cS)
+    --cpustat|-cs)
         shift
-        Cpustat
+        Header "Cpu stat: "
+        cat /proc/stat
+        Footer
         ;;
-    --hardwarename|-HN)
+    --hardwarename|-hn)
         shift
-        Hardwarename
+        Header "Server hardware name and model: "
+        sudo dmidecode | grep -A3 '^System Information'
+        Footer
         ;;
-    --checkswap|-sS)
+    --checkswap|-ss)
         shift
-        Checkswap
+        Header "Your current swappiness setting: "
+        cat /proc/sys/vm/swappiness
+        Footer
         ;;
-    --changeswap=*|-sC=*)
+    --changeswap=*|-sc=*)
         swap_value="${1#*=}"
         shift
-        Changeswap
+        Header "Change your current swappiness setting: "
+        #echo "current value: " 
+        #cat /proc/sys/vm/swappiness
+        #echo "enter value: "
+        #read xvalue
+        sudo sysctl vm.swappiness=$swap_value
+        Footer
         ;;
-    --changeswap|-sC)
+    --changeswap|-sc)
         shift
-        Changeswap2
+        Header "Change your current swappiness setting: "
+        sudo sysctl vm.swappiness
+        Footer
         ;;
-    --swap=enable|--swapenable|--swap=on|--swapon|-sE)
+    --swap=enable|--swapenable|--swap=on|--swapon|-se)
         swapon=on
         shift
-        Enableswap
+        Header "Enable swap: "
+        sudo swap$swapon -a
+        Footer
         ;;
-    --swap=disable|--swapdisable|--swap=off|--swapoff|-sD)
+    --swap=disable|--swapdisable|--swap=off|--swapoff|-sd)
         swapoff=off
         shift
-        Disableswap
+        Header "Disable swap: "
+        sudo swap$swapoff -a
+        Footer
         ;;
-    --checkthumbnails|-tC)
+    --checkthumbnails|-tc)
         shift
-        Check_thumbnail
+        Header "Check thumbnail cache: "
+        du -sh ~/.cache/thumbnails
+        Footer
         ;;
-    --removethumbnails|-tR)
+    --removethumbnails|-tr)
         shift
-        Remove_thumbnail
+        Header "Remove/Clean thumbnail cache: "
+        sudo rm -rf ~/.cache/thumbnails/*
+        Footer
         ;;
     --chmod|-ch)
         shift
         Chmod_table
         ;;
-    --subfolders|-sF)
+    --etcpasswd|-ep)
         shift
-        Subfolders
+        Etcpasswd
+        ;;
+    --etcshadow|-es)
+        shift
+        Etcshadow
+        ;;
+    --movingcli)
+        shift
+        Movingcli
+        ;;
+    --subfolders|-sf)
+        shift
+        Header " Subfolders: "
+        echo "Liczba podkatalogów to:  " $(ls -al | grep '^d' | tail -n +3 | wc -l)
+        Footer
         ;;
     --aptupdate|-u)
         shift
-        Aptupdate
+        Header " System update: "
+        sleep 2
+        echo -e "Updating and upgrading system.... \n"
+        sleep 2
+        sudo apt update 
+        sudo apt upgrade 
+        sudo apt autoremove
+        sudo apt remove --purge
+        Header " DONE."
+        Footer
         ;;
     --version|-V)
         shift
-        Version
+        echo -e "Program version: v0.3#alpha"
         ;;
     --update|-U)
         shift
-        Update
+        echo "This option is not available yet"
+        echo "Visit https://uscripts.org  or  https://github.com/dan1988dan/uscripts"
         ;;
     --about|-A)
         shift
-        About
+        echo '"UScripts" - means - "Usefull Scripts"'
+        echo -e "License: Open Source"
         ;;
     *)
         shift
