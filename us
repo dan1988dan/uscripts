@@ -49,41 +49,42 @@ Help() {                   # Help message
     echo ""
     echo "OPTIONS:"
     echo "--------"
-    echo "-t   --checktor           Check are you using Tor or not"
-    echo '-p   --ping=URL           Ping (e.g. "ping=redhat.com") - default URL is "google.com"'
-    echo "-I   --checkip            Public ip"
-    echo "-u   --uptime             Tell how long the system has been running"
-    echo "-i   --systeminfo         System info and public ip address"
-    echo "-k   --kernel             Check kernel version"
-    echo "-d   --dns                Hostname and dns info and local ip"
-    echo "-w   --who                Who is online"
-    echo "-l   --last               Last logged in users"
-    echo "-dU  --discusage          Disc usage"
-    echo "-dS  --discusages         Disc usage (short)"
-    echo "-kS  --showkernels        Show old kernels list"
-    echo "-kR  --removekernels      Remove old kernels"
-    echo "-fE  --firmwareerrors     Show all firmware errors"
-    echo "-vM  --virtualmemory      Report virtual memory statistics"
-    echo "-mI  --memoryinfo         Print the memory information"
-    echo "-cI  --cpuinfo            Print the cpu information"
-    echo "-cA  --cpuarchitecture    Display information about the cpu architecture"
-    echo "-cL  --cpuaverage         Check the cpu load average"
-    echo "-cS  --cpustat            Check the cpu stat"
-    echo "-sS  --checkswap          Check your current swappiness setting"
-    echo '-sC  --changeswap=value   Change your current swappiness setting (e.g. "changeswap=60")'
-    echo "-sE  --swap=enable        Enable swap"
-    echo "-sD  --swap=disable       Disable swap"
-    echo "-tC  --checkthumbnail     Check thumbnail cache"
-    echo "-tR  --removethumbnail    Remove thumbnail cache"
-    echo "-c   --chmod              Print chmod permissions table"
-    echo "-sF  --subfolders         Tell you how many subfolders are here"
-    echo "-uU  --aptupdate          Update and upgrade system, after remove all unused dependecies"
+    echo "-t    --checktor           Check are you using Tor or not"
+    echo '-p    --ping               Ping (e.g. "ping=redhat.com") - [[default URL is "google.com"]]'
+    echo '      --ping=URL'
+    echo "-I    --checkip            Public ip"
+    echo "-u    --uptime             Tell how long the system has been running"
+    echo "-i    --systeminfo         System info and public ip address"
+    echo "-k    --kernel             Check kernel version"
+    echo "-d    --dns                Hostname and dns info and local ip"
+    echo "-w    --who                Who is online"
+    echo '-l    --last=value         Last logged in users (e.g. "last=10") - [[default prints everything]]'
+    echo "-du   --discusage          Disc usage"
+    echo "-ds   --discusages         Disc usage (short)"
+    echo "-ks   --showkernels        Show old kernels list"
+    echo "-kr   --removekernels      Remove old kernels"
+    echo "-fe   --firmwareerrors     Show all firmware errors"
+    echo "-vm   --virtualmemory      Report virtual memory statistics"
+    echo "-mi   --memoryinfo         Print the memory information"
+    echo "-ci   --cpuinfo            Print the cpu information"
+    echo "-ca   --cpuarchitecture    Display information about the cpu architecture"
+    echo "-cl   --cpuaverage         Check the cpu load average"
+    echo "-cs   --cpustat            Check the cpu stat"
+    echo "-hn   --handwarename       Find the server hardware name and model"
+    echo "-ss   --checkswap          Check your current swappiness setting"
+    echo '-sc   --changeswap=value   Change your current swappiness setting (e.g. "changeswap=60")'
+    echo "-se   --swap=enable        Enable swap"
+    echo "-sd   --swap=disable       Disable swap"
+    echo "-tc   --checkthumbnail     Check thumbnail cache"
+    echo "-tr   --removethumbnail    Remove thumbnail cache"
+    echo "-ch   --chmod              Print chmod permissions table"
+    echo "-sf   --subfolders         Tell you how many subfolders are here"
+    echo "-uu   --aptupdate          Update and upgrade system, after remove all unused dependecies"
     echo "-----------------         ------------------------------------"
-    echo "-h   --help               Print basic help message and exit"
-    echo "-hh  --Help               Print advanced help message and exit"
-    echo "-V  --version             Print program version and exit"
-    echo "-U  --update              Update program to new version"
-    echo "-A  --about               About..."
+    echo "-h    --help               Print basic help message and exit"
+    echo "-V    --version            Print program version and exit"
+    echo "-U    --update             Update program to new version"
+    echo "-A    --about              About..."
     Footer
 }
 Checktor() {                 # Check are you using Tor or not
@@ -138,6 +139,11 @@ Who_is_online() {            # Who is online
     Footer
 }    
 Last_logged_in_users() {
+    Header " Last logged in users: "
+    last -n $last_number
+    Footer
+}
+Last_logged_in_users2() {
     Header " Last logged in users: "
     last
     Footer
@@ -197,6 +203,11 @@ Cpustat() {
     cat /proc/stat
     Footer
 }
+Hardwarename() {
+    Header "Server hardware name and model: "
+    sudo dmidecode | grep -A3 '^System Information'
+    Footer
+}
 Checkswap() {
     Header "Your current swappiness setting: "
     cat /proc/sys/vm/swappiness
@@ -237,28 +248,18 @@ Remove_thumbnail() {
     Footer
 }
 Chmod_table() {
-
     local red="\e[0;91m"
     local reset="\e[0m"
     Header "chmod  -  Permissions Table:"
-echo "
-	| User	Group	Other
-	|
-Read	|  4	  4	  4
-	|
-Write	|  2	  2	  2	
-	|
-Execute |  1	  1	  1
-	|
-	|  U	  G	  O
-	|  X	  X	  X"
 echo -e "
-${red}Chmods:${reset}
-777	=	rwxrwxrwx
-755	=	rwxr-xr-x
-644	=	rw-r--r--
-700	=	rwx------
-750	=	rwxr-x---"
+         |  U   G   O            ${red}Chmods:${reset}
+          -----------            777 = rwxrwxrwx
+ (r)ead  |  4   4   4            755 = rwxr-xr-x
+ (w)rite |  2   2   2            644 = rw-r--r--
+e(x)ecute|  1   1   1            700 = rwx------
+         |                       750 = rwxr-x---
+
+U=users   G=group   O=others"
 Footer
 }
 Subfolders() {               # Tell you how many subfolders are in current path
@@ -279,16 +280,15 @@ Aptupdate() {                # Update and upgrade system, after remove all unuse
     Footer
 }
 Version() {                  # Program Version
-    echo -e "Program version: v0.2#alpha \n"
+    echo -e "Program version: v0.3#alpha"
 }
 About() {                    # About program
-    Header " About: "
-    echo -e "About..... \n"
+    echo '"UScripts" - means - "Usefull Scripts"'
+    echo -e "License: Open Source"
 }
 Update() {                   # Update program
-    Header " Update: "
     echo "This option is not available yet"
-    echo -e "Sorry .... \n"
+    echo "Visit https://uscripts.org  or  https://github.com/dan1988dan/uscripts"
 }
 
 
@@ -329,7 +329,7 @@ case $1 in
         shift
         Systeminfo
         ;;
-    --kernel|-k)
+    --kernel|-k|k)
         shift
         Kernel
         ;;
@@ -341,9 +341,14 @@ case $1 in
         shift
         Who_is_online
         ;;
-    --last|-l)
+    --last=*|-l=*)
+        last_number="${1#*=}"
         shift
         Last_logged_in_users
+        ;;
+    --last|-l)
+        shift
+        Last_logged_in_users2
         ;;
     --discusage|-dU)
         shift
@@ -389,6 +394,10 @@ case $1 in
         shift
         Cpustat
         ;;
+    --hardwarename|-HN)
+        shift
+        Hardwarename
+        ;;
     --checkswap|-sS)
         shift
         Checkswap
@@ -398,7 +407,7 @@ case $1 in
         shift
         Changeswap
         ;;
-        --changeswap|-sC)
+    --changeswap|-sC)
         shift
         Changeswap2
         ;;
@@ -420,7 +429,7 @@ case $1 in
         shift
         Remove_thumbnail
         ;;
-    --chmod|-c)
+    --chmod|-ch)
         shift
         Chmod_table
         ;;
