@@ -45,7 +45,7 @@ Wrongparam() {               # Print message when wrong parameter
 Help() {                   # Help message
     Print_logo
     echo "Usage:  us.sh [options]"
-    echo "Example:  ./us -i -d -w"
+    echo "Example:  ./us -i -d -w -sC=60"
     echo ""
     echo "OPTIONS:"
     echo "--------"
@@ -196,11 +196,16 @@ Checkswap() {
 }
 Changeswap() {
     Header "Change your current swappiness setting: "
-    echo "current value: " 
-    cat /proc/sys/vm/swappiness
-    echo "enter value: "
-    read xvalue
-    sudo sysctl vm.swappiness=$xvalue
+    #echo "current value: " 
+    #cat /proc/sys/vm/swappiness
+    #echo "enter value: "
+    #read xvalue
+    sudo sysctl vm.swappiness=$swap_value
+    Footer
+}
+Changeswap2() {
+    Header "Change your current swappiness setting: "
+    sudo sysctl vm.swappiness
     Footer
 }
 Check_thumbnail() {
@@ -274,6 +279,8 @@ if [ "$1" = "" ]; then              # Option no parameter
 fi
 
 while [ ! -z "$1" ]; do             # Options
+#for i in "$@"
+#do
 case $1 in
     --help|-h)
         shift
@@ -295,7 +302,7 @@ case $1 in
         shift
         Uptime
         ;;
-    --systeminfo|-i)
+    --systeminfo|-i|i)
         shift
         Systeminfo
         ;;
@@ -303,11 +310,11 @@ case $1 in
         shift
         Kernel
         ;;
-    --dns|-d)
+    --dns|-d|d)
         shift
         Host_Dns
         ;;
-    --who|-w)
+    --who|-w|w)
         shift
         Who_is_online
         ;;
@@ -363,9 +370,14 @@ case $1 in
         shift
         Checkswap
         ;;
-    --changeswap|-sC)
+    --changeswap=*|-sC=*)
+        swap_value="${1#*=}"
         shift
         Changeswap
+        ;;
+        --changeswap|-sC)
+        shift
+        Changeswap2
         ;;
     --checkthumbnails|-tC)
         shift
@@ -406,6 +418,3 @@ case $1 in
         ;;
 esac
 done
-
-
-
