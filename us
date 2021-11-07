@@ -36,72 +36,176 @@ Noparam() {                  # Print message when no parameter
     echo "          ./uscripts -h"
     echo "          ./uscripts --help"
     echo "          ./us -h"
-    echo "          ./us --help"
+    echo "          ./us --help" 
     Footer
+    Footer
+echo "https://uscripts.org not working yet!"
+echo "Please visit https://github.com/dan1988dan/uscripts"
 }
 Wrongparam() {               # Print message when wrong parameter
     printf "error:  incorrenct parameter "
 }
+Version() {
+    echo -e "Program version: v0.3#alpha"
+}
+About() {
+    echo '"UScripts" - means - "Usefull Scripts"'
+    echo -e "License: Open Source"
+}
 Help() {                   # Help message
     Print_logo
-    echo "Usage:  us.sh [option] [option=value]"
-    echo "Example:  ./us -i -d -w -sC=60"
-    echo ""
-    echo "OPTIONS:"
-    echo "--------"
-    echo "-t    --checktor           Check are you using Tor or not"
-    echo '-p    --ping=[URL]         Ping (e.g. "ping=redhat.com") - [[default URL is "google.com"]]'
-    echo "-I    --checkip            Public ip"
-    echo "-u    --uptime             Tell how long the system has been running"
-    echo "-i    --systeminfo         System info and public ip address"
-    echo "-k    --kernel             Check kernel version"
-    echo "-d    --dns                Hostname and dns info and local ip"
-    echo "-w    --who                Who is online"
-    echo '-l    --last=[VALUE]       Last logged in users (e.g. "last=10") - [[default prints everything]]'
-    echo "-du   --discusage          Disc usage"
-    echo "-ds   --discusages         Disc usage (short)"
-    echo "-ks   --showkernels        Show old kernels list"
-    echo "-kr   --removekernels      Remove old kernels"
-    echo "-fe   --firmwareerrors     Show all firmware errors"
-    echo "-vm   --virtualmemory      Report virtual memory statistics"
-    echo "-mi   --memoryinfo         Print the memory information"
-    echo "-ci   --cpuinfo            Print the cpu information"
-    echo "-ca   --cpuarchitecture    Display information about the cpu architecture"
-    echo "-cl   --cpuaverage         Check the cpu load average"
-    echo "-cs   --cpustat            Check the cpu stat"
-    echo "-hn   --handwarename       Find the server hardware name and model"
-    echo "-ss   --checkswap          Check your current swappiness setting"
-    echo '-sc   --changeswap=[VALUE] Change your current swappiness setting (e.g. "changeswap=60")'
-    echo "-se   --swap=enable        Enable swap"
-    echo "-sd   --swap=disable       Disable swap"
-    echo "-tc   --checkthumbnail     Check thumbnail cache"
-    echo "-tr   --removethumbnail    Remove thumbnail cache"
-    echo "-sf   --subfolders         Tell you how many subfolders are here"
-    echo "-uu   --aptupdate          Update and upgrade system, after remove all unused dependecies"
-    echo -e "-----------------         ------------------------------------
-    CHEAT SHEET:"
-    echo "-ch   --chmod              chmod permissions table"
-    echo "-ep   --etcpasswd          etc/passwd explanation"
-    echo "-es   --etcshadow          etc/shadow explanation"
-    echo "      --movingcli          moving cli shortcuts"
-    echo -e "-----------------         ------------------------------------
-    PROGRAM:"
-    echo "-h    --help               Print basic help message and exit"
-    echo "-V    --version            Print program version and exit"
-    echo "-U    --update             Update program to new version"
-    echo "-A    --about              About..."
+    printf 'Usage:  us.sh [option] [option=value]
+Example:  ./us -i -d -w -sC=60
+
+
+OPTIONS:
+-----------------  
+-u    --uptime             Tell how long the system has been running
+-i    --systeminfo         System info and public ip address
+-hn   --handwarename       Find the server hardware name and model
+-fe   --firmwareerrors     Show all firmware errors
+
+-w    --who                Who is online
+-l    --last=[VALUE]       Last logged in users (e.g. "last=10") - [[default prints everything]]
+
+-t    --checktor           Check are you using Tor or not
+-p    --ping=[URL]         Ping (e.g. "ping=redhat.com") - [[default URL is "google.com"]]
+-I    --checkip            Public ip
+-d    --dns                Hostname and dns info and local ip
+
+-du   --discusage          Disc usage
+-ds   --discusages         Disc usage (short)
+
+-ci   --cpuinfo            Print the cpu information
+-ca   --cpuarchitecture    Display information about the cpu architecture
+-cl   --cpuaverage         Check the cpu load average
+-cs   --cpustat            Check the cpu stat
+
+-vm   --virtualmemory      Report virtual memory statistics
+-mi   --memoryinfo         Print the memory information
+
+-ss   --checkswap          Check your current swappiness setting
+-sc   --changeswap=[VALUE] Change your current swappiness setting (e.g. "changeswap=60")
+-se   --swap=enable        Enable swap
+-sd   --swap=disable       Disable swap
+
+-k    --kernel             Check kernel version
+-ks   --showkernels        Show old kernels list
+-kr   --removekernels      Remove old kernels
+
+-tc   --checkthumbnail     Check thumbnail cache
+-tr   --removethumbnail    Remove thumbnail cache
+-sf   --subfolders         Tell you how many subfolders are here
+-uu   --aptupdate          Update and upgrade system, after remove all unused dependecies
+
+      --chmod              chmod permissions table
+      --etcpasswd          etc/passwd explanation
+      --etcshadow          etc/shadow explanation
+      --movingcli          moving cli shortcuts
+
+-h    --help               Show basic help message and exit
+-hh   --hhelp              Show advanced help message and exit
+-V    --version            Print program version and exit
+-U    --update             Update program to new version
+-A    --about              About...'
     Footer
 }
-#Ping() {
-#    Header " Ping: "
-#    ping google.com -c 8
-#    Footer
-#}
-#Ping2() {
-#    Header " Ping: "
-#    ping $ping_url -c 8
-#    Footer
-#}
+Hhelp() {                   # Help message
+    Print_logo
+    printf 'Usage:  us.sh [option] [option=value]
+Example:  ./us -i -d -w -sC=60
+
+
+   SYSTEM INFO:
+-----------------  
+-u    --uptime             Tell how long the system has been running
+                                [=pretty]   wypisanie czasu działania w ładnym formacie
+                                [=since]   system włączony od
+-i    --systeminfo         System info and public ip address
+                                [=id]   show distributor ID
+                                [=description]   show description of this distribution
+                                [=release]   show release number of this distribution
+                                [=codename]   show code name of this distribution
+                                [=all]   show all of the above information
+                                [=short]   show requested information in short format
+-hn   --handwarename       Find the server hardware name and model
+-fe   --firmwareerrors     Show all firmware errors
+
+
+     USERS:
+-----------------  
+-w    --who                Who is online
+-l    --last=[VALUE]       Last logged in users (e.g. "last=10") - [[default prints everything]]
+
+
+   NETWORKING:
+-----------------         
+-t    --checktor           Check are you using Tor or not
+-p    --ping=[URL]         Ping (e.g. "ping=redhat.com") - [[default URL is "google.com"]]
+-I    --checkip            Public ip
+-d    --dns                Hostname and dns info and local ip
+
+
+     DISCS:
+-----------------   
+-du   --discusage          Disc usage
+-ds   --discusages         Disc usage (short)
+
+
+      CPU:
+-----------------         
+-ci   --cpuinfo            Print the cpu information
+-ca   --cpuarchitecture    Display information about the cpu architecture
+-cl   --cpuaverage         Check the cpu load average
+-cs   --cpustat            Check the cpu stat
+
+
+     MEMORY:
+-----------------         
+-vm   --virtualmemory      Report virtual memory statistics
+-mi   --memoryinfo         Print the memory information
+
+
+      SWAP:
+-----------------         
+-ss   --checkswap          Check your current swappiness setting
+-sc   --changeswap=[VALUE] Change your current swappiness setting (e.g. "changeswap=60")
+-se   --swap=enable        Enable swap
+-sd   --swap=disable       Disable swap
+
+
+     KERNEL:
+-----------------         
+-k    --kernel             Check kernel version
+-ks   --showkernels        Show old kernels list
+-kr   --removekernels      Remove old kernels
+
+
+      OTHER:
+-----------------         
+-tc   --checkthumbnail     Check thumbnail cache
+-tr   --removethumbnail    Remove thumbnail cache
+-sf   --subfolders         Tell you how many subfolders are here
+-uu   --aptupdate          Update and upgrade system, after remove all unused dependecies
+
+
+  CHEAT SHEET:              -CS  --cheatsheet
+-----------------         
+      --chmod              chmod permissions table
+      --etcpasswd          etc/passwd explanation
+      --etcshadow          etc/shadow explanation
+      --movingcli          moving cli shortcuts
+
+
+    PROGRAM:                -VA  --versionabout
+-----------------         
+-h    --help               Print basic help message and exit
+-hh   --hhelp              Print help message in list
+-V    --version            Print program version and exit
+-U    --update             Update program to new version
+-A    --about              About...'
+    Footer
+}
 Chmod_table() {
     local red="\e[0;91m"
     local reset="\e[0m"
@@ -177,20 +281,52 @@ case $1 in
         shift
         Help
         ;;
+    --hhelp|-hh)
+        shift
+        Hhelp
+        ;;
     --checktor|-t)
         shift
         Header " Check Tor: "
         curl -sS https://check.torproject.org | grep --color -m1 'Congratulations.\|This browser\|is configured\|to use\|Tor.\|Sorry.\|You are\|not using'
         Footer
         ;; 
-    --ping|-p)
+
+#    Ping() {
+#    Header " Ping: "
+#    ping google.com -c 8
+#    Footer
+#    }
+
+#    Ping2() {
+#    Header " Ping: "
+#    ping $ping_url -c 8
+#    Footer 
+#    }
+
+#   --last=*|-l=*)
+#       last_number="${1#*=}"
+#       shift
+#       Header " Last logged in users: "
+#       last -n $last_number
+#       Footer
+#       ;;
+    --ping|-p|--ping=|-p=)
         shift
             if [ "$1" ]; then
                 Header " Ping: "
-                ping $1
-            else
+                ping $1 $2 $3                       #DOKOŃCZYĆ PING. PROBLEM Z WYBOREM OPCJI -c (ile razy ma wyświetlić ping)
+            else                                    #ZAMIENIEĆ -c na time=
                 ping google.pl
             fi
+        ;;
+    --ping=*|-p=*)
+        ping_value="${1#*=}"
+        time_value="-c${2#*=}"
+        shift
+        shift
+        Header " Ping: "
+        ping $ping_value $time_value
         ;;
     --checkip|-I)
         shift
@@ -201,7 +337,14 @@ case $1 in
     --uptime|-u)
         shift
         Header "Uptime: "
-        uptime
+        uptime $2
+        Footer
+        ;;
+    --uptime=*)
+        uptime_value="--${1#*=}"
+        shift
+        Header "Uptime: "
+        uptime $uptime_value
         Footer
         ;;
     --systeminfo|-i)
@@ -220,7 +363,7 @@ case $1 in
     --dns|-d)
         shift
         Header " Hostname and DNS info and ip: "
-        local dnsips=$(sed -e '/^$/d' /etc/resolv.conf | awk '{if (tolower($1)=="nameserver") print $2}')
+        dnsips=$(sed -e '/^$/d' /etc/resolv.conf | awk '{if (tolower($1)=="nameserver") print $2}')
         echo "Hostname : $(hostname -s)"
         echo "DNS domain : $(hostname -d)"
         echo "Fully qualified domain name : $(hostname -f)"
@@ -324,43 +467,6 @@ case $1 in
         sudo dmidecode | grep -A3 '^System Information'
         Footer
         ;;
-    --checkswap|-ss)
-        shift
-        Header "Your current swappiness setting: "
-        cat /proc/sys/vm/swappiness
-        Footer
-        ;;
-    --changeswap=*|-sc=*)
-        swap_value="${1#*=}"
-        shift
-        Header "Change your current swappiness setting: "
-        #echo "current value: " 
-        #cat /proc/sys/vm/swappiness
-        #echo "enter value: "
-        #read xvalue
-        sudo sysctl vm.swappiness=$swap_value
-        Footer
-        ;;
-    --changeswap|-sc)
-        shift
-        Header "Change your current swappiness setting: "
-        sudo sysctl vm.swappiness
-        Footer
-        ;;
-    --swap=enable|--swapenable|--swap=on|--swapon|-se)
-        swapon=on
-        shift
-        Header "Enable swap: "
-        sudo swap$swapon -a
-        Footer
-        ;;
-    --swap=disable|--swapdisable|--swap=off|--swapoff|-sd)
-        swapoff=off
-        shift
-        Header "Disable swap: "
-        sudo swap$swapoff -a
-        Footer
-        ;;
     --checkthumbnails|-tc)
         shift
         Header "Check thumbnail cache: "
@@ -408,19 +514,67 @@ case $1 in
         Header " DONE."
         Footer
         ;;
+    --checkswap|-ss)
+        shift
+        Header "Your current swappiness setting: "
+        cat /proc/sys/vm/swappiness
+        Footer
+        ;;
+    --changeswap=*|-sc=*)
+        swap_value="${1#*=}"
+        shift
+        Header "Change your current swappiness setting: "
+        #echo "current value: " 
+        #cat /proc/sys/vm/swappiness
+        #echo "enter value: "
+        #read xvalue
+        sudo sysctl vm.swappiness=$swap_value
+        Footer
+        ;;
+    --changeswap|-sc)
+        shift
+        Header "Change your current swappiness setting: "
+        sudo sysctl vm.swappiness
+        Footer
+        ;;
+    --swap=enable|--swapenable|--swap=on|--swapon|-se)
+        swapon=on
+        shift
+        Header "Enable swap: "
+        sudo swap$swapon -a
+        Footer
+        ;;
+    --swap=disable|--swapdisable|--swap=off|--swapoff|-sd)
+        swapoff=off
+        shift
+        Header "Disable swap: "
+        sudo swap$swapoff -a
+        Footer
+        ;;
     --version|-V)
         shift
-        echo -e "Program version: v0.3#alpha"
+        Version
         ;;
     --update|-U)
         shift
-        echo "This option is not available yet"
+        echo "Update option is not available yet"
         echo "Visit https://uscripts.org  or  https://github.com/dan1988dan/uscripts"
         ;;
     --about|-A)
         shift
-        echo '"UScripts" - means - "Usefull Scripts"'
-        echo -e "License: Open Source"
+        About
+        ;;
+    -CS|--cheatsheet)
+        shift
+        Chmod_table
+        Etcpasswd
+        Etcshadow
+        Movingcli
+        ;;
+    -VA|--versionabout)
+        shift
+        Version
+        About
         ;;
     *)
         shift
